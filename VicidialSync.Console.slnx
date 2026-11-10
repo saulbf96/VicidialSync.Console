@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="VicidialSync.App/VicidialSync.App.csproj" />
+  <Project Path="VicidialSync.Application/VicidialSync.Application.csproj" />
+  <Project Path="VicidialSync.Domain/VicidialSync.Domain.csproj" />
+  <Project Path="VicidialSync.Infrastructure/VicidialSync.Infrastructure.csproj" />
+  <Project Path="VicidialSync.Tests/VicidialSync.Tests.csproj" />
+</Solution>
