@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VicidialSync.Application\VicidialSync.Application.csproj" />
     <ProjectReference Include="..\VicidialSync.Domain\VicidialSync.Domain.csproj" />
     <ProjectReference Include="..\VicidialSync.Infrastructure\VicidialSync.Infrastructure.csproj" />
   </ItemGroup>
