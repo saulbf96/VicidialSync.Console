@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "VicidialSync.App": {
+      "commandName": "Project",
+      "commandLineArgs": "--migrar",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

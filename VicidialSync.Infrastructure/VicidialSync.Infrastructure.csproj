@@ -21,4 +21,18 @@
     <ProjectReference Include="..\VicidialSync.Application\VicidialSync.Application.csproj" />
   </ItemGroup>
 
+  <!-- Scripts SQL: viven fuera del repo y se meten dentro del .dll al compilar. -->
+  <PropertyGroup>
+    <CarpetaScripts Condition="'$(CarpetaScripts)' == ''">$(USERPROFILE)\Desktop\Trabajos\VOICES_VICIDIAL\SCRIPTS</CarpetaScripts>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(CarpetaScripts)\*.sql" LogicalName="Scripts.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Si no encuentra la carpeta, la compilación falla con un mensaje claro. -->
+  <Target Name="ValidarCarpetaScripts" BeforeTargets="BeforeBuild">
+    <Error Condition="!Exists('$(CarpetaScripts)')" Text="No se encontró la carpeta de scripts: $(CarpetaScripts)" />
+  </Target>
+
 </Project>
