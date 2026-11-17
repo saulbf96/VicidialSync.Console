@@ -18,7 +18,11 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     // Host con configuracion (appsettings, user-secrets, variables de entorno)
-    var builder = Host.CreateApplicationBuilder(args);
+    var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
+    {
+        Args = args,
+        ContentRootPath = AppContext.BaseDirectory
+    });
     builder.Services.AddSerilog();
     builder.Services.AddSingleton<MigradorBaseDatos>();
     builder.Services.AddSingleton<CargadorVicidial>();
@@ -36,13 +40,25 @@ try
         return ok ? 0 : 1;
     }
 
+    var cadenaMariaDb = builder.Configuration.GetConnectionString("MariaDb")
+        ?? throw new InvalidOperationException("Falta ConnectionStrings:MariaDb");
+
+    // Carga inicial reanudable: --inicial [minutosPorBloque]
+    var posicionInicial = Array.IndexOf(args, "--inicial");
+    if (posicionInicial >= 0)
+    {
+        var fechaInicio = builder.Configuration.GetValue("Carga:FechaInicio", new DateTime(2026, 11, 1));
+        var minutosInicial = args.Length > posicionInicial + 1 && int.TryParse(args[posicionInicial + 1], out var mi) ? mi : 30;
+
+        var ok = await host.Services.GetRequiredService<CargadorVicidial>()
+            .CargaInicialAsync(cadenaMariaDb, cadena, fechaInicio, minutosInicial);
+        return ok ? 0 : 1;
+    }
+
     // Prueba de carga: --cargar 2026-11-10T08:00 2026-11-10T10:00 [minutosPorBloque]
     var posicion = Array.IndexOf(args, "--cargar");
     if (posicion >= 0)
     {
-        var cadenaMariaDb = builder.Configuration.GetConnectionString("MariaDb")
-            ?? throw new InvalidOperationException("Falta ConnectionStrings:MariaDb");
-
         var desde = DateTime.Parse(args[posicion + 1], CultureInfo.InvariantCulture);
         var hasta = DateTime.Parse(args[posicion + 2], CultureInfo.InvariantCulture);
         var minutos = args.Length > posicion + 3 && int.TryParse(args[posicion + 3], out var m) ? m : 30;
