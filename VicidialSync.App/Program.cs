@@ -2,7 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Globalization;
 using VicidialSync.Infrastructure.BaseDatos;
+using VicidialSync.Infrastructure.Vicidial;
 
 var carpetaLogs = Path.Combine(AppContext.BaseDirectory, "logs");
 
@@ -19,6 +21,7 @@ try
     var builder = Host.CreateApplicationBuilder(args);
     builder.Services.AddSerilog();
     builder.Services.AddSingleton<MigradorBaseDatos>();
+    builder.Services.AddSingleton<CargadorVicidial>();
 
     using var host = builder.Build();
 
@@ -30,6 +33,24 @@ try
     if (args.Contains("--migrar"))
     {
         var ok = host.Services.GetRequiredService<MigradorBaseDatos>().Migrar(cadena);
+        return ok ? 0 : 1;
+    }
+
+    // Prueba de carga: --cargar 2026-11-10T08:00 2026-11-10T10:00 [minutosPorBloque]
+    var posicion = Array.IndexOf(args, "--cargar");
+    if (posicion >= 0)
+    {
+        var cadenaMariaDb = builder.Configuration.GetConnectionString("MariaDb")
+            ?? throw new InvalidOperationException("Falta ConnectionStrings:MariaDb");
+
+        var desde = DateTime.Parse(args[posicion + 1], CultureInfo.InvariantCulture);
+        var hasta = DateTime.Parse(args[posicion + 2], CultureInfo.InvariantCulture);
+        var minutos = args.Length > posicion + 3 && int.TryParse(args[posicion + 3], out var m) ? m : 30;
+
+        Log.Information("Carga de {Desde:yyyy-MM-dd HH:mm} a {Hasta:yyyy-MM-dd HH:mm} en bloques de {Minutos} min", desde, hasta, minutos);
+
+        var ok = await host.Services.GetRequiredService<CargadorVicidial>()
+            .CargarAsync(cadenaMariaDb, cadena, desde, hasta, minutos);
         return ok ? 0 : 1;
     }
 
