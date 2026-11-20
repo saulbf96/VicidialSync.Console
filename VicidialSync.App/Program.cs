@@ -46,6 +46,16 @@ try
         return ok ? 0 : 1;
     }
 
+    // Carga de una sola vez de vicidial_carrier_log de octubre a su tabla aparte: --carrier-octubre [minutosPorBloque=60]
+    var posicionOctubre = Array.IndexOf(args, "--carrier-octubre");
+    if (posicionOctubre >= 0)
+    {
+        var minutos = LeerMinutos(args, posicionOctubre + 1) ?? 60;
+        var ok = await host.Services.GetRequiredService<CargaCarrierOctubre>()
+            .CargarAsync(new DateTime(2026, 10, 1), new DateTime(2026, 11, 1), minutos);
+        return ok ? 0 : 1;
+    }
+
     var cargas = host.Services.GetRequiredService<CargaVicidialService>();
 
     // Carga inicial reanudable: --inicial [minutosPorBloque]

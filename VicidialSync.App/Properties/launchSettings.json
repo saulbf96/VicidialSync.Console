@@ -7,6 +7,13 @@
         "DOTNET_ENVIRONMENT": "Development"
       }
     },
+    "Carrier octubre 205": {
+      "commandName": "Project",
+      "commandLineArgs": "--carrier-octubre --destino Sql205",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
     "Migrar 205": {
       "commandName": "Project",
       "commandLineArgs": "--migrar --destino Sql205",

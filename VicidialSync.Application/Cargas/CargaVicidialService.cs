@@ -110,6 +110,8 @@ namespace VicidialSync.Application.Cargas
             return ok;
         }
 
+
+
         private async Task<ResultadoBloque> CargarBloqueAsync(TablaVicidial tabla, DateTime? desde, DateTime? hasta, CancellationToken ct)
         {
             var reloj = Stopwatch.StartNew();

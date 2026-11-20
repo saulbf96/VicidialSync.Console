@@ -16,6 +16,7 @@ namespace VicidialSync.Infrastructure
             services.AddSingleton<IDestinoCargas, DestinoSqlServer>();
             services.AddSingleton<IControlCargas, ControlSqlServer>();
             services.AddSingleton<CargaVicidialService>();
+            services.AddSingleton<CargaCarrierOctubre>();
             return services;
         }
     }
