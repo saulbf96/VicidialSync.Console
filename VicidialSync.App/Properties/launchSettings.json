@@ -1,6 +1,27 @@
 {
   "profiles": {
-    "VicidialSync.App": {
+    "Inicial 205": {
+      "commandName": "Project",
+      "commandLineArgs": "--inicial --destino Sql205",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Migrar 205": {
+      "commandName": "Project",
+      "commandLineArgs": "--migrar --destino Sql205",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Inicial local": {
+      "commandName": "Project",
+      "commandLineArgs": "--inicial",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "Migrar local": {
       "commandName": "Project",
       "commandLineArgs": "--migrar",
       "environmentVariables": {
