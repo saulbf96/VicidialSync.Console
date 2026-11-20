@@ -16,6 +16,7 @@ namespace VicidialSync.Infrastructure.BaseDatos
                 .WithScriptSorter(s => s.OrderBy(x => x.SqlScriptOptions.RunGroupOrder))
                 .JournalToSqlTable("dbo", "TBL_VERSIONES_VICIDIAL")
                 .WithTransactionPerScript()
+                .WithExecutionTimeout(TimeSpan.FromMinutes(10))
                 .LogToNowhere()
                 .Build();
 
